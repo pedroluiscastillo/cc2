@@ -1,79 +1,96 @@
-//insert
-#include <iostream>
+class Array {
+private:
+    int* data;      // Puntero a los datos almacenados en el array
+    int size;       // Tamaño actual del array
 
-void insert(int arr[], int& n, int pos, int value) {
-    // Crear espacio para el nuevo elemento
-    for (int i = n - 1; i >= pos; i--) {
-        arr[i + 1] = arr[i];
-    }
-    // Insertar el nuevo elemento
-    arr[pos] = value;
-    n++;
-}
+public:
+    // Constructor por defecto
+    Array() : data(nullptr), size(0) {}
 
-int main() {
-    int arr[10] = {1, 2, 3, 4, 5};
-    int n = 5;
-
-    int value = 6;
-    int* ptr = &value;
-
-    insert(arr, n, 2, *ptr);
-
-    for (int i = 0; i < n; i++) {
-        std::cout << arr[i] << " ";
+    // Destructor
+    ~Array() {
+        delete[] data;  // Liberamos la memoria reservada
     }
 
-    return 0;
-}
+    // Función para insertar un elemento en una posición determinada
+    void insert(int value, int position) {
+        // Si la posición no es válida, no hacemos nada
+        if (position < 0 || position > size) {
+            return;
+        }
 
-//remove
-#include <iostream>
+        // Creamos un nuevo array con un elemento más
+        int* newData = new int[size + 1];
 
-void remove(int arr[], int& n, int pos) {
-    // Eliminar el elemento en la posición dada
-    for (int i = pos; i < n - 1; i++) {
-        arr[i] = arr[i + 1];
-    }
-    n--;
-}
+        // Copiamos los elementos antes de la posición
+        for (int i = 0; i < position; i++) {
+            newData[i] = data[i];
+        }
 
-int main() {
-    int arr[10] = {1, 2, 3, 4, 5};
-    int n = 5;
+        // Insertamos el nuevo elemento
+        newData[position] = value;
 
-    int* ptr = &arr[2];
+        // Copiamos los elementos después de la posición
+        for (int i = position; i < size; i++) {
+            newData[i + 1] = data[i];
+        }
 
-    remove(arr, n, ptr - arr);
+        // Liberamos la memoria del array original
+        delete[] data;
 
-    for (int i = 0; i < n; i++) {
-        std::cout << arr[i] << " ";
-    }
-
-    return 0;
-}
-//push_back
-#include <iostream>
-
-void push_back(int arr[], int& n, int value) {
-    // Insertar el nuevo elemento al final del array
-    arr[n] = value;
-    n++;
-}
-
-int main() {
-    int arr[10] = {1, 2, 3, 4, 5};
-    int n = 5;
-
-    int value = 6;
-    int* ptr = &value;
-
-    push_back(arr, n, *ptr);
-
-    for (int i = 0; i < n; i++) {
-        std::cout << arr[i] << " ";
+        // Actualizamos el puntero a los datos y el tamaño del array
+        data = newData;
+        size++;
     }
 
-    return 0;
-}
+    // Función para eliminar un elemento en una posición determinada
+    void remove(int position) {
+        // Si la posición no es válida, no hacemos nada
+        if (position < 0 || position >= size) {
+            return;
+        }
+
+        // Creamos un nuevo array con un elemento menos
+        int* newData = new int[size - 1];
+
+        // Copiamos los elementos antes de la posición
+        for (int i = 0; i < position; i++) {
+            newData[i] = data[i];
+        }
+
+        // Copiamos los elementos después de la posición
+        for (int i = position + 1; i < size; i++) {
+            newData[i - 1] = data[i];
+        }
+
+        // Liberamos la memoria del array original
+        delete[] data;
+
+        // Actualizamos el puntero a los datos y el tamaño del array
+        data = newData;
+        size--;
+    }
+
+    // Función para agregar un elemento al final del array
+    void pushback(int value) {
+        // Creamos un nuevo array con un elemento más
+        int* newData = new int[size + 1];
+
+        // Copiamos los elementos del array original
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[i];
+        }
+
+        // Agregamos el nuevo elemento al final del array
+        newData[size] = value;
+
+        // Liberamos la memoria del array original
+        delete[] data;
+
+        // Actualizamos el puntero a los datos y el tamaño del array
+        data = newData;
+        size++;
+    }
+};
+
 
