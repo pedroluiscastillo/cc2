@@ -1,0 +1,156 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Personaje {
+private:
+    int capacidad; // capacidad del arreglo
+    int longitud; // longitud actual del arreglo
+    string* nombres; // puntero al arreglo de nombres
+    string* generos; // puntero al arreglo de géneros
+    double* alturas; // puntero al arreglo de alturas
+    string* habilidades; // puntero al arreglo de habilidades
+    string* talentos; // puntero al arreglo de talentos
+    int* edades; // puntero al arreglo de edades
+
+public:
+    // constructor
+    Personaje(int _capacidad) {
+        capacidad = _capacidad;
+        longitud = 0;
+        nombres = new string[capacidad];
+        generos = new string[capacidad];
+        alturas = new double[capacidad];
+        habilidades = new string[capacidad];
+        talentos = new string[capacidad];
+        edades = new int[capacidad];
+    }
+
+    // destructor
+    ~Personaje() {
+        delete[] nombres;
+        delete[] generos;
+        delete[] alturas;
+        delete[] habilidades;
+        delete[] talentos;
+        delete[] edades;
+    }
+
+    // función para insertar un nuevo personaje en una posición específica
+    void insert(int posicion, string nombre, string genero, double altura, string habilidad, string talento, int edad) {
+        // si la posición es inválida, no hacemos nada
+        if (posicion < 0 || posicion > longitud) {
+            return;
+        }
+
+        // si el arreglo está lleno, redimensionamos
+        if (longitud == capacidad) {
+            capacidad *= 2;
+            string* nuevos_nombres = new string[capacidad];
+            string* nuevos_generos = new string[capacidad];
+            double* nuevas_alturas = new double[capacidad];
+            string* nuevas_habilidades = new string[capacidad];
+            string* nuevos_talentos = new string[capacidad];
+            int* nuevas_edades = new int[capacidad];
+
+            // copiamos los elementos existentes en los nuevos arreglos
+            for (int i = 0; i < longitud; i++) {
+                nuevos_nombres[i] = nombres[i];
+                nuevos_generos[i] = generos[i];
+                nuevas_alturas[i] = alturas[i];
+                nuevas_habilidades[i] = habilidades[i];
+                nuevos_talentos[i] = talentos[i];
+                nuevas_edades[i] = edades[i];
+            }
+
+            // liberamos memoria del arreglo anterior
+            delete[] nombres;
+            delete[] generos;
+            delete[] alturas;
+            delete[] habilidades;
+            delete[] talentos;
+            delete[] edades;
+
+            // asignamos los nuevos arreglos a los punteros de la clase
+            nombres = nuevos_nombres;
+            generos = nuevos_generos;
+            alturas = nuevas_alturas;
+            habilidades = nuevas_habilidades;
+            talentos = nuevos_talentos;
+            edades = nuevas_edades;
+        }
+
+        // movemos los elementos a la derecha para hacer espacio para el nuevo elemento
+        for (int i = longitud - 1; i >= posicion; i--) {
+            nombres[i + 1] = nombres[i];
+            generos[i + 1] = generos[i];
+           
+        alturas[i + 1] = alturas[i];
+        habilidades[i + 1] = habilidades[i];
+        talentos[i + 1] = talentos[i];
+        edades[i + 1] = edades[i];
+    }
+
+    // asignamos los nuevos valores al nuevo elemento
+    nombres[posicion] = nombre;
+    generos[posicion] = genero;
+    alturas[posicion] = altura;
+    habilidades[posicion] = habilidad;
+    talentos[posicion] = talento;
+    edades[posicion] = edad;
+
+    longitud++; // incrementamos la longitud del arreglo
+}
+
+// función para eliminar un personaje de una posición específica
+void remove(int posicion) {
+    // si la posición es inválida, no hacemos nada
+    if (posicion < 0 || posicion >= longitud) {
+        return;
+    }
+
+    // movemos los elementos a la izquierda para llenar el espacio vacío
+    for (int i = posicion; i < longitud - 1; i++) {
+        nombres[i] = nombres[i + 1];
+        generos[i] = generos[i + 1];
+        alturas[i] = alturas[i + 1];
+        habilidades[i] = habilidades[i + 1];
+        talentos[i] = talentos[i + 1];
+        edades[i] = edades[i + 1];
+    }
+
+    longitud--; // decrementamos la longitud del arreglo
+}
+
+// función para agregar un nuevo personaje al final del arreglo
+void push_back(string nombre, string genero, double altura, string habilidad, string talento, int edad) {
+    insert(longitud, nombre, genero, altura, habilidad, talento, edad);
+}
+
+// función para imprimir los personajes en el arreglo
+void imprimir() {
+    for (int i = 0; i < longitud; i++) {
+        cout << "Personaje #" << i + 1 << ": " << nombres[i] << ", " << generos[i] << ", " << alturas[i] << ", " << habilidades[i] << ", " << talentos[i] << ", " << edades[i] << endl;
+    }
+}
+};
+int main(){
+
+Personaje personajes(2);
+// insertamos algunos personajes
+personajes.insert(0, "Mario", "Hombre", 1.50, "Saltar", "Super Fuerza", 30);
+personajes.insert(1, "Luigi", "Hombre", 1.55, "Correr", "Super Saltar", 35);
+personajes.push_back("Peach", "Mujer", 1.60, "Flotar", "Inteligencia", 28);
+
+// imprimimos los personajes
+personajes.imprimir();
+
+// eliminamos un personaje
+personajes.remove(1);
+
+// imprimimos los personajes actualizados
+personajes.imprimir();
+
+return 0;
+}
