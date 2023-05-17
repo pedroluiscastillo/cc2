@@ -1,0 +1,90 @@
+#include <iostream>
+#include <string>
+
+template <typename T>
+class DynamicArray {
+private:
+    int capacity; // capacidad del arreglo
+    int length; // longitud actual del arreglo
+    T* data; // puntero al arreglo de datos
+
+public:
+    // constructor
+    DynamicArray(int _capacity) {
+        capacity = _capacity;
+        length = 0;
+        data = new T[capacity];
+    }
+
+    // destructor
+    ~DynamicArray() {
+        delete[] data;
+    }
+
+    // función para insertar un nuevo elemento en una posición específica
+    void insert(int position, const T& element) {
+        // si la posición es inválida, no hacemos nada
+        if (position < 0 || position > length) {
+            return;
+        }
+
+        // si el arreglo está lleno, redimensionamos
+        if (length == capacity) {
+            capacity *= 2;
+            T* new_data = new T[capacity];
+
+            // copiamos los elementos existentes en el nuevo arreglo
+            for (int i = 0; i < length; i++) {
+                new_data[i] = data[i];
+            }
+
+            // liberamos memoria del arreglo anterior
+            delete[] data;
+
+            // asignamos el nuevo arreglo al puntero de la clase
+            data = new_data;
+        }
+
+        // movemos los elementos a la derecha para hacer espacio para el nuevo elemento
+        for (int i = length - 1; i >= position; i--) {
+            data[i + 1] = data[i];
+        }
+
+        // asignamos el nuevo elemento a la posición indicada
+        data[position] = element;
+
+        length++; // incrementamos la longitud del arreglo
+    }
+
+    // función para eliminar un elemento de una posición específica
+    void remove(int position) {
+        // si la posición es inválida, no hacemos nada
+        if (position < 0 || position >= length) {
+            return;
+        }
+
+        // movemos los elementos a la izquierda para llenar el espacio vacío
+        for (int i = position; i < length - 1; i++) {
+            data[i] = data[i + 1];
+        }
+
+        length--; // decrementamos la longitud del arreglo
+    }
+
+    // función para agregar un nuevo elemento al final del arreglo
+    void push_back(const T& element) {
+        insert(length, element);
+    }
+
+    // función para obtener la longitud actual del arreglo
+    int size() const {
+        return length;
+    }
+
+    // función para imprimir los elementos en el arreglo
+    void print() const {
+        for (int i = 0; i < length; i++) {
+            std::cout << "Element #" << i + 1 << ": " << data[i] << std::endl;
+        }
+    }
+};
